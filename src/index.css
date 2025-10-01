@@ -74,4 +74,35 @@ html, body, #root {
   button {
     background-color: #f9f9f9;
   }
+
+  /* Formation and lineup styles */
+.field {
+  display: grid;
+  grid-template-columns: repeat(6, 120px); /* adjust based on positions */
+  grid-template-rows: repeat(5, 100px);
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.slot {
+  border: 1px solid #333;
+  background-color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  min-width: 100px;
+  min-height: 60px;
+}
+
+.player-card {
+  background-color: #f0f0f0;
+  padding: 5px;
+  text-align: center;
+  border-radius: 4px;
+}
+
 }
