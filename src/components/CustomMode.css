@@ -1,0 +1,101 @@
+.custom-mode {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  background-color: #1e3a5f;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+.tabs button {
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+.tabs .active {
+  background-color: #ffcc00;
+  color: #000;
+}
+
+.field {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  background-color: #0b6623;
+  margin-top: 10px;
+}
+
+.slot {
+  position: absolute;
+  width: 80px;
+  height: 40px;
+  background-color: #f39c12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.selection-screen {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  background-color: #34495e;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.selected-slot {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.player-slot-big {
+  width: 200px;
+  height: 100px;
+  background-color: #f39c12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.player-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+}
+
+.player-card {
+  flex: 0 0 auto;
+  width: 150px;
+  height: 80px;
+  background-color: #2ecc71;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.player-card.selected {
+  border: 3px solid #ffcc00;
+}
+
+.back-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+}

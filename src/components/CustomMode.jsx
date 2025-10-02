@@ -1,207 +1,154 @@
-import { useState } from 'react'
+import React, { useState } from "react";
+import "./CustomMode.css";
 
-function PlayerCard({ player }) {
-    reutnr (
-        <div className="player-card">
-            <h4>{player.name}</h4>
-            <p>{player.num}</p>
-            <p>{player.position}</p>
-            <p>Rating: {player.rating ?? "N/A"}</p>
-        </div>
-    );
-}
+const formations = {
+  offense: [
+    { id: "QB", type: "QB", top: "70%", left: "45%" },
+    { id: "RB", type: "RB", top: "60%", left: "45%" },
+    { id: "FB", type: "FB", top: "65%", left: "55%" },
+    { id: "WR1", type: "WR", top: "50%", left: "10%" },
+    { id: "WR2", type: "WR", top: "50%", left: "80%" },
+    { id: "SWR", type: "WR", top: "55%", left: "65%" },
+    { id: "TE", type: "TE", top: "55%", left: "30%" },
+    { id: "LT", type: "OL", top: "40%", left: "25%" },
+    { id: "LG", type: "OL", top: "40%", left: "35%" },
+    { id: "C", type: "OL", top: "40%", left: "45%" },
+    { id: "RG", type: "OL", top: "40%", left: "55%" },
+    { id: "RT", type: "OL", top: "40%", left: "65%" },
+  ],
+  defense: [
+    { id: "DL1", type: "DL", top: "40%", left: "25%" },
+    { id: "DL2", type: "DL", top: "40%", left: "40%" },
+    { id: "DL3", type: "DL", top: "40%", left: "55%" },
+    { id: "DL4", type: "DL", top: "40%", left: "70%" },
+    { id: "LB1", type: "LB", top: "55%", left: "35%" },
+    { id: "LB2", type: "LB", top: "55%", left: "50%" },
+    { id: "LB3", type: "LB", top: "55%", left: "65%" },
+    { id: "CB1", type: "CB", top: "65%", left: "15%" },
+    { id: "CB2", type: "CB", top: "65%", left: "80%" },
+    { id: "S1", type: "S", top: "75%", left: "35%" },
+    { id: "S2", type: "S", top: "75%", left: "65%" },
+  ],
+  special: [
+    { id: "K", type: "K", top: "60%", left: "45%" },
+    { id: "P", type: "P", top: "70%", left: "55%" },
+    { id: "LS", type: "LS", top: "65%", left: "35%" },
+  ],
+};
 
-function CustomMode({ onBack }) {
-    const [roster, setRoster] = useState([])
+// Simple player list for testing
+const availablePlayers = {
+  QB: [{ id: 1, name: "Patrick Mahomes" }, { id: 2, name: "Josh Allen" }],
+  RB: [{ id: 3, name: "Derrick Henry" }, { id: 4, name: "Christian McCaffrey" }],
+  FB: [{ id: 5, name: "Kyle Juszczyk" }],
+  WR: [
+    { id: 6, name: "Davante Adams" },
+    { id: 7, name: "Tyreek Hill" },
+    { id: 8, name: "Stefon Diggs" },
+  ],
+  TE: [{ id: 9, name: "Travis Kelce" }, { id: 10, name: "Mark Andrews" }],
+  OL: [{ id: 11, name: "Trent Williams" }, { id: 12, name: "David Bakhtiari" }],
+  DL: [{ id: 13, name: "Aaron Donald" }, { id: 14, name: "Myles Garrett" }],
+  LB: [{ id: 15, name: "Fred Warner" }, { id: 16, name: "Darius Leonard" }],
+  CB: [{ id: 17, name: "Jalen Ramsey" }, { id: 18, name: "Jaire Alexander" }],
+  S: [{ id: 19, name: "Minkah Fitzpatrick" }, { id: 20, name: "Derwin James" }],
+  K: [{ id: 21, name: "Justin Tucker" }],
+  P: [{ id: 22, name: "Johnny Hekker" }],
+  LS: [{ id: 23, name: "Josh Harris" }],
+};
 
-    const [positions, setPositions] = useState({
-        QB: 3, 
-        RB: 4,
-        FB: 1,
-        WR: 6,
-        TE: 3,
-        OL: 10,
-        DL: 7,
-        LB: 7,
-        CB: 5,
-        S: 4,
-        K: 1,
-        P: 1,
-        LS: 1
-    });
+const CustomMode = () => {
+  const [activeTab, setActiveTab] = useState("offense");
+  const [assigned, setAssigned] = useState({});
+  const [modalSlot, setModalSlot] = useState(null);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
 
-    const [step, setStep] = useState(1)
+  const handleSlotClick = (slot) => {
+    setModalSlot(slot);
+    setSelectedPlayer(assigned[slot.id] || null);
+  };
 
-    const totalPlayers = Object.values(positions).reduce((a, b) => a + b, 0)
+  const handlePlayerSelect = (player) => {
+    setSelectedPlayer(player);
+  };
 
-    const handleChange = (pos, value) => {
-        setPositions({
-            ...positions,
-            [pos]: Number(value)
-        });
-    };
+  const handleBack = () => {
+    if (modalSlot && selectedPlayer) {
+      setAssigned((prev) => ({
+        ...prev,
+        [modalSlot.id]: selectedPlayer,
+      }));
+    }
+    setModalSlot(null);
+    setSelectedPlayer(null);
+  };
 
-    const allPlayers = [
-        {id: 1, name: "Patrick Mahomes", num: "15", position: "QB", rating: 97},
-        {id: 2, name: "Derrick Henry", num: "22", position: "RB", rating: 95},
-        {id: 3, name: "Davante Adams", num: "17", position: "WR", rating: 90},
-        {id: 4, name: "Travis Kelce", num: "87", position: "TE", rating: 87},
-        {id: 5, name: "Jalen Ramsey", num: "5", position: "CB", rating: 89},
-        {id: 6, name: "Minkah Fitzpatrick", num: "29", position: "S", rating: 86},
-    ];
+  // Filter available players to prevent duplicates
+  const getFilteredPlayers = (type) => {
+    const usedIds = Object.values(assigned).map((p) => p?.id);
+    return availablePlayers[type]?.filter((p) => !usedIds.includes(p.id)) || [];
+  };
 
-    const formationSlots = [];
-    Object.keys(positions).forEach((pos) => {
-        for (let i = 1; i <= positions[pos]; i++) {
-            formationSlots.push({ id: `${pos}${i}`, position: pos});
-        }
-    });
+  return (
+    <div className="custom-mode">
+      {/* Tabs */}
+      <div className="tabs">
+        {["offense", "defense", "special"].map((tab) => (
+          <button
+            key={tab}
+            className={activeTab === tab ? "active" : ""}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab.toUpperCase()}
+          </button>
+        ))}
+      </div>
 
-    const [selectedPlayers, setSelectedPlayers] = useState(
-        formationSlots.reduce((acc, slot) => {
-            acc[slot.id] = null;
-            return acc;
-        }, {})
-    );
-
-    const [activeSlot, setActiveSlot] = useState(null);
-
-    const selectPlayer = (player) => {
-        if (!activeSlot) return;
-        setSelectedPlayers((prev) => ({
-            ...prev,
-            [activeSlot]: player
-        }));
-        setActiveSlot(null);
-    };
-
-    return (
-        <div 
-            style={{ 
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minHeight: '100vh',
-                textAlign: 'center'
-            }}
-        >
-            <button
-                onClick={onBack}
-                style={{marginBottom: '20px', padding: '10px 20px'}}
+      {/* Field */}
+      {!modalSlot && (
+        <div className="field">
+          {formations[activeTab].map((slot) => (
+            <div
+              key={slot.id}
+              className="slot"
+              style={{ top: slot.top, left: slot.left }}
+              onClick={() => handleSlotClick(slot)}
             >
-                Back to Main Menu
-            </button>
-            
-            {step === 1  && (
-                <>
-                    <h2>Set Your Roster Numbers</h2>
-                    <h3>Select how many players for each position (53 total):</h3>
-                    {Object.keys(positions).map((pos) => (
-                        <div key={pos} style={{margin: '5px'}}>
-                            <label>{pos}: </label>
-                            <input
-                                type="number"
-                                min="0"
-                                value={positions[pos]}
-                                onChange={(e) => handleChange(pos, e.target.value)}
-                                style={{ width: '50px'}}
-                            />
-                        </div>
-                ))}
-                <p>Total players: {totalPlayers}</p>
-                <button
-                    disabled={totalPlayers !== 53}
-                    onClick={() => setStep(2)}
-                    style={{
-                        padding: '10px 20px',
-                        marginTop: '10px',
-                        backgroundColor: totalPlayers === 53 ? '#4CAF50' : '#aaa',
-                        color: 'white',
-                        cursor: totalPlayers === 53 ? 'pointer' : 'not-allowed'
-                    }}
-                >
-                    Continue
-                </button>
-            </>
-        )}
-            
-
-        {step === 2 && (
-                <>
-                    <h2>Build Your Team</h2>
-
-                    <div className="field">
-                        {formationSlots.map((slot) => (
-                            <div
-                                key={slot.id}
-                                className="slot"
-                                onClick={() => setActiveSlot(slot.id)}
-                            >
-                                {selectedPlayers[slot.id] ? (
-                                    <PlayerCard player={selectedPlayers[slot.id]} />
-                                ) : (
-                                    <span>{slot.position}</span>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Player selection modal */}
-                    {activeSlot && (
-                        <div
-                            style={{
-                                marginTop: "20px",
-                                border: "1px #333",
-                                padding: "10px",
-                                borderRadius: "8px",
-                                backgroundColor: "#1a1a1a",
-                                color: "#fff"
-                            }}
-                        >
-                            <h3>
-                                Select a{" "}
-                                {formationSlots.find((s) => s.id === activeSlot).position}
-                            </h3>
-                            {allPlayers
-                                .filter(
-                                    (p) =>
-                                        p.position ===
-                                        formationSlots.find((s) => s.id === activeSlot).position
-                                )
-                                .map((player) => (
-                                    <button
-                                        key={player.id}
-                                        onClick={() => selectPlayer(player)}
-                                        style = {{ display: "block", margin: "5px auto"}}
-                                    >
-                                        {player.name} (Rating: {player.rating})
-                                    </button>
-                                ))}
-                            <button
-                                onClick={() => selectPlayer(player)}
-                                style={{ disply: "block", margin: "10px auto"}}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    )}
-
-                    <h3>Your Roster:</h3>
-                    <ul>
-                        {Object.values(selectedPlayers).map(
-                            (player, index) =>
-                                player && (
-                                    <li key={index}>
-                                        {player.name} ({player.position})
-                                    </li>
-                                )
-                        )}
-                    </ul>
-                </>
-            )}
+              {assigned[slot.id]?.name || slot.type}
+            </div>
+          ))}
         </div>
-    );
-}
+      )}
 
-export default CustomMode
+      {/* Player Selection Screen */}
+      {modalSlot && (
+        <div className="selection-screen">
+          <div className="selected-slot">
+            <h2>{modalSlot.type}</h2>
+            <div className="player-slot-big">
+              {selectedPlayer ? selectedPlayer.name : "Empty"}
+            </div>
+          </div>
+          <div className="player-scroll">
+            {getFilteredPlayers(modalSlot.type).map((player) => (
+              <div
+                key={player.id}
+                className={`player-card ${
+                  selectedPlayer?.id === player.id ? "selected" : ""
+                }`}
+                onClick={() => handlePlayerSelect(player)}
+              >
+                {player.name}
+              </div>
+            ))}
+          </div>
+          <button className="back-btn" onClick={handleBack}>
+            Back
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CustomMode;
